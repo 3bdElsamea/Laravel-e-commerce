@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddToCartRequest;
+use App\Http\Resources\CartResource;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 
@@ -12,18 +14,51 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        //Get Cart Items for the current user
+        $userId = auth()->id();
+        $cartItems = Cart::where('user_id', $userId)->with('product')->get();
+
+        //Return the cart items
+        return responseJson(CartResource::Collection($cartItems));
+
     }
 
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AddToCartRequest $request)
     {
-        //
-    }
+        $userId = auth()->id();
+        //Get the validated $productId and $quantity from the request
+        $productId = $request->validated()['product_id'];
+        $quantity = $request->validated()['quantity'];
 
+        //Check if the product is already in the cart
+        $cartItem = Cart::where('user_id', $userId)->where('product_id', $productId)->first();
+
+        //If the product is already in the cart, update the quantity
+        if ($cartItem) {
+            //Load the product relationship
+            $cartItem->load('product');
+            // Validate if the incresed quantity wouldn't exceed the available quantity
+            $newQuantity = $cartItem->quantity + $quantity;
+            if ($newQuantity > $cartItem->product->quantity) {
+                return responseJson(null, "The selected quantity exceeds the available quantity of {$cartItem->product->quantity}.", 422);
+            }
+            $cartItem->increment('quantity', $quantity);
+
+            return responseJson(null, "Item quantity updated successfully.");
+        }
+        //If the product is not in the cart, create a new cart item
+        Cart::create([
+            'user_id' => $userId,
+            'product_id' => $productId,
+            'quantity' => $quantity,
+        ]);
+
+        return responseJson(null, "Item added to cart successfully.");
+    }
 
     /**
      * Update the specified resource in storage.
@@ -38,6 +73,9 @@ class CartController extends Controller
      */
     public function destroy(Cart $cart)
     {
-        //
+        // Delete the cart item
+        $cart->delete();
+
+        return responseJson(null, "Item removed from cart successfully.");
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,3 +28,6 @@ Route::group([
 
 // Route for products only show and index
 Route::apiResource('products', ProductController::class)->only(['index', 'show'])->middleware('auth:api');
+
+// Route for cart
+Route::apiResource('cart', CartController::class)->middleware('auth:api');
