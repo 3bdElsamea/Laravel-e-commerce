@@ -37,13 +37,12 @@ class AuthController extends Controller
             return responseJson(null, null, 401, 'Please enter your email and password');
         }
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = auth('api')->attempt($credentials)) {
             return responseJson(null, null, 401, 'Invalid credentials');
         }
-        
-        dd($token);
 
-        return responseJson(new UserResource(auth()->user()), $token, 200, 'Success');
+//        dd($token, auth('api')->user());
+        return responseJson(new UserResource(auth('api')->user()), $token, 200, 'Success');
     }
 
     /**
@@ -51,7 +50,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        auth('api')->logout();
 
         return responseJson(null, null, 200, 'Successfully logged out');
 
