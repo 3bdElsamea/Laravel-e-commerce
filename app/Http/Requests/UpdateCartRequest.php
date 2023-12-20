@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckAddProductQuantity;
 use App\Rules\CheckUpdatingProductQuantity;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddToCartRequest extends FormRequest
+class UpdateCartRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +24,7 @@ class AddToCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required|exists:products,id',
-            'quantity' => [
-                'required',
-                'integer',
-                new CheckAddProductQuantity($this->input('product_id'))],
+            'quantity' => ['required', 'integer', new CheckUpdatingProductQuantity($this->route('cart'))]
         ];
     }
 }

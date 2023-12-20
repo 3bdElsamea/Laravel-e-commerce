@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\UpdateCartRequest;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
 use Illuminate\Http\Request;
@@ -63,9 +64,26 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cart $cart)
+    public function update(UpdateCartRequest $request, Cart $cart)
     {
-        //
+        //Get the validated $quantity from the request
+        $quantity = $request->validated()['quantity'];
+
+        //Load the product relationship
+//        $cart->load('product');
+
+        // Validate if the incresed quantity wouldn't exceed the available quantity
+//        $newQuantity = $quantity;
+//        if ($newQuantity > $cart->product->quantity) {
+//            return responseJson(null, "The selected quantity exceeds the available quantity of {$cart->product->quantity}.", 422);
+//        }
+
+        //Update the cart item
+        $cart->update([
+            'quantity' => $quantity,
+        ]);
+
+        return responseJson(null, "Item quantity updated successfully.");
     }
 
     /**

@@ -2,19 +2,20 @@
 
 namespace App\Rules;
 
+use App\Models\Cart;
 use App\Models\Product;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
-class CheckProductQuantity implements ValidationRule
+class CheckUpdatingProductQuantity implements ValidationRule
 {
-    protected $productId;
+    protected $cart;
 
 
-    public function __construct($productId)
+    public function __construct(Cart $cart)
     {
-        $this->productId = $productId;
+        $this->cart = $cart;
     }
 
     /**
@@ -24,8 +25,7 @@ class CheckProductQuantity implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $product = Product::find($this->productId);
-//        dd($product, $value);
+        $product = $this->cart->product;
         if (!$product) {
             $fail("Unexpected error: Unable to validate the selected product.");
         } elseif ($product && $product->quantity < 1) {
