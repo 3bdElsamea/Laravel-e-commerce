@@ -19,3 +19,17 @@ if (!function_exists('responseJson')) {
         return response($response, $status);
     }
 }
+
+// New validateProductQuantity function
+if (!function_exists('validateProductQuantity')) {
+    function validateProductQuantity($product, $value, Closure $fail)
+    {
+        if (!$product) {
+            $fail("Unexpected error: Unable to validate the selected product.");
+        } elseif ($product->quantity < 1) {
+            $fail("The selected product is out of stock.");
+        } elseif ($product->quantity < $value) {
+            $fail("The selected quantity exceeds the available quantity of {$product->quantity}.");
+        }
+    }
+}

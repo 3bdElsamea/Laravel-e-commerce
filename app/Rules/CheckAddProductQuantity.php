@@ -26,13 +26,7 @@ class CheckAddProductQuantity implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $product = Product::find($this->productId);
-        if (!$product) {
-            $fail("Unexpected error: Unable to validate the selected product.");
-        } elseif ($product && $product->quantity < 1) {
-            $fail("The selected product is out of stock.");
-        } elseif ($product && $product->quantity < $value) {
-            $fail("The selected quantity exceeds the available quantity of {$product->quantity}.");
-        }
+        validateProductQuantity($product, $value, $fail);
 
     }
 
