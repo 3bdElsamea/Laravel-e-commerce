@@ -45,11 +45,11 @@ class CartController extends Controller
             // Validate if the incresed quantity wouldn't exceed the available quantity
             $newQuantity = $cartItem->quantity + $quantity;
             if ($newQuantity > $cartItem->product->quantity) {
-                return responseJson(null, "The selected quantity exceeds the available quantity of {$cartItem->product->quantity}.", 422);
+                return responseJson(null, null, 422, "The selected quantity exceeds the available quantity of {$cartItem->product->quantity}.");
             }
             $cartItem->increment('quantity', $quantity);
 
-            return responseJson(null, "Item quantity updated successfully.");
+            return responseJson(null, null, 200, "Item quantity updated successfully.");
         }
         //If the product is not in the cart, create a new cart item
         Cart::create([
@@ -58,7 +58,7 @@ class CartController extends Controller
             'quantity' => $quantity,
         ]);
 
-        return responseJson(null, "Item added to cart successfully.");
+        return responseJson(null, null, 200, "Item added to cart successfully.");
     }
 
     /**
@@ -83,7 +83,7 @@ class CartController extends Controller
             'quantity' => $quantity,
         ]);
 
-        return responseJson(null, "Item quantity updated successfully.");
+        return responseJson(null, null, 200, "Item quantity updated successfully.");
     }
 
     /**
@@ -94,6 +94,6 @@ class CartController extends Controller
         // Delete the cart item
         $cart->delete();
 
-        return responseJson(null, "Item removed from cart successfully.");
+        return responseJson(null, null, 200, "Item removed from cart successfully.");
     }
 }

@@ -42,7 +42,7 @@ class AuthController extends Controller
         }
 
 //        dd($token, auth('api')->user());
-        return responseJson(new UserResource(auth('api')->user()), $token, 200, 'Success');
+        return responseJson(new UserResource(auth('api')->user()), $token);
     }
 
     /**

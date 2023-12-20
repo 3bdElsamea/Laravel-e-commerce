@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,8 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['guest:api'],
     'prefix' => 'auth'
+
 ], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -27,7 +29,15 @@ Route::group([
 });
 
 // Route for products only show and index
-Route::apiResource('products', ProductController::class)->only(['index', 'show'])->middleware('auth:api');
+Route::apiResource('products', ProductController::class)->only(['index', 'show']);
 
-// Route for cart
-Route::apiResource('cart', CartController::class)->middleware('auth:api');
+Route::group([
+    'middleware' => ['auth:api', 'isUser'],
+],
+    function ($router) {
+        // Route for cart
+        Route::apiResource('cart', CartController::class);
+
+        // Route for order
+        Route::post('order', [OrderController::class, 'store']);
+    });
