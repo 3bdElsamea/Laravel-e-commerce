@@ -19,7 +19,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <!-- Scripts -->
-{{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 </head>
 <body>
     <div id="app">
@@ -50,18 +53,18 @@
 
 
                         @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link mx-4" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <i class="fa-solid fa-bell"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    @foreach([1,2,3,4,5] as $num)
-                                        <a class="dropdown-item" >
-                                            {{ $num }}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </li>
+{{--                            <li class="nav-item dropdown">--}}
+{{--                                <a id="navbarDropdown" class="nav-link mx-4" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>--}}
+{{--                                    <i class="fa-solid fa-bell"></i>--}}
+{{--                                </a>--}}
+{{--                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">--}}
+{{--                                    @foreach([1,2,3,4,5] as $num)--}}
+{{--                                        <a class="dropdown-item" >--}}
+{{--                                            {{ $num }}--}}
+{{--                                        </a>--}}
+{{--                                    @endforeach--}}
+{{--                                </div>--}}
+{{--                            </li>--}}
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -91,6 +94,25 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
         </script>
+
+    @if(auth()->check())
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) {
+                Echo.channel(`private-App.Models.User.{{ auth()->id() }}`  )
+                    .notification((notification) => {
+                        Swal.fire({
+                            title: "New Order",
+                            text: notification.message,
+                            // icon: 'success',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'bottom-end',
+                        })
+                    });
+            });
+
+        </script>
+        @endif
     </div>
 </body>
 </html>

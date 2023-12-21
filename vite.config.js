@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import mix from "laravel-mix";
+
+mix.js('resources/js/app.js', 'public/js')
 
 export default defineConfig({
     plugins: [
@@ -9,6 +12,7 @@ export default defineConfig({
                 'resources/js/app.js',
             ],
             refresh: true,
+            publicBase: '/public/',
         }),
     ],
 });
