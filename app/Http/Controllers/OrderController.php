@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItems;
+use App\Models\User;
+use App\Notifications\OrderCreatedNotification;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -26,9 +28,15 @@ class OrderController extends Controller
                 'user_id' => $userId,
             ]);
 
+
             // Get the cart items for the user//            dd($userId);
 
             $cartItems = Cart::where('user_id', $userId)->with('product')->get();
+//            If the cart is empty, return an error
+            if ($cartItems->isEmpty()) {
+                return responseJson(null, null, 400, 'Cart is empty.');
+            }
+
             // Loop through the cart items and create a new order item for each
             foreach ($cartItems as $cartItem) {
                 OrderItems::create([
@@ -48,11 +56,18 @@ class OrderController extends Controller
             //Commit the transaction
             DB::commit();
 
+//            Send notification to all admins
+
+            $admins = User::where('is_admin', 1)->get();
+            Notification::send($admins, new OrderCreatedNotification());
+
+
+
             return responseJson(null, null, 200, 'Order created successfully.');
         } catch (Exception $e) {
             //If an exception occurs, rollback the transaction
             DB::rollBack();
-            return responseJson(null, $e->getMessage(), 500);
+            return responseJson(null, null,500,$e->getMessage());
         }
 
     }
