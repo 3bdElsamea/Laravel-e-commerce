@@ -74,7 +74,7 @@ class OrderController extends Controller
             Notification::create([
                 'type' => 'App\Notifications\OrderCreatedNotification',
                 'notifiable_type' => 'App\Models\User',
-                'notifiable_id' => 3,
+                'notifiable_id' => auth()->user()->id,
                 'data' =>  auth()->user()->name.' made a New Order',
             ]);
 

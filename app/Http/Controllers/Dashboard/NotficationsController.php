@@ -13,6 +13,7 @@ class NotficationsController extends Controller
     public function index()
     {
         $notifications =Notification::paginate(25);
+
 //        dd($notifications);
         return view('notifications',compact('notifications'));
     }
