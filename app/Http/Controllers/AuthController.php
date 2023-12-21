@@ -37,7 +37,7 @@ class AuthController extends Controller
             return responseJson(null, null, 401, 'Please enter your email and password');
         }
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (!$token = auth('api')->attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_admin' => 0])) {
             return responseJson(null, null, 401, 'Invalid credentials');
         }
 

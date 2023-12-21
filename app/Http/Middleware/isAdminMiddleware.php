@@ -16,7 +16,7 @@ class isAdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->user()->is_admin) {
-            return responseJson(null, 'You are not authorized to access this route', 401);
+            return responseJson(null,null,401, 'You are not authorized to access this route',);
         }
         return $next($request);
     }
