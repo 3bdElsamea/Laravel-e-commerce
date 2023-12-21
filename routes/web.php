@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\NotficationsController;
 use App\Http\Controllers\Dashboard\OrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth','isAdmin']], function () {
     Route::get('/', [OrderController::class, 'index'])->name('home');
     Route::get('/order/{order}', [OrderController::class, 'show'])->name('showOrder');
+    Route::get('/notifications', [NotficationsController::class, 'index'])->name('notifications');
 
 });
 

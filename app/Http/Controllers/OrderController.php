@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\OrderCreatedEvent;
 use App\Models\Cart;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Exception;
@@ -66,6 +67,16 @@ class OrderController extends Controller
 //            Send notification to all admins
 //            $admins = User::where('is_admin', 1)->get();
 //            Notification::send($admins, new OrderCreatedNotification());
+
+//            Another way to send notification to all admins
+
+//            Create a new notification
+            Notification::create([
+                'type' => 'App\Notifications\OrderCreatedNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => 3,
+                'data' =>  auth()->user()->name.' made a New Order',
+            ]);
 
 //            Send notification to all admins using event
             Event::dispatch(new OrderCreatedEvent(auth()->user()->name.' made a New Order'));

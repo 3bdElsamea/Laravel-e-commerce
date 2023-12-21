@@ -53,18 +53,11 @@
 
 
                         @else
-{{--                            <li class="nav-item dropdown">--}}
-{{--                                <a id="navbarDropdown" class="nav-link mx-4" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>--}}
-{{--                                    <i class="fa-solid fa-bell"></i>--}}
-{{--                                </a>--}}
-{{--                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">--}}
-{{--                                    @foreach([1,2,3,4,5] as $num)--}}
-{{--                                        <a class="dropdown-item" >--}}
-{{--                                            {{ $num }}--}}
-{{--                                        </a>--}}
-{{--                                    @endforeach--}}
-{{--                                </div>--}}
-{{--                            </li>--}}
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link mx-4" href="{{route('notifications')}}" role="button" >
+                                    <i class="fa-solid fa-bell"></i>
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
