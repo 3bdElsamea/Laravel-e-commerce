@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCreatedEvent;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItems;
 use App\Models\User;
 use App\Notifications\OrderCreatedNotification;
 use Exception;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\DB;
 
@@ -57,10 +59,11 @@ class OrderController extends Controller
             DB::commit();
 
 //            Send notification to all admins
+//            $admins = User::where('is_admin', 1)->get();
+//            Notification::send($admins, new OrderCreatedNotification());
 
-            $admins = User::where('is_admin', 1)->get();
-            Notification::send($admins, new OrderCreatedNotification());
-
+//            Send notification to all admins using event
+            Event::dispatch(new OrderCreatedEvent(auth()->user()->name.' New Order Created'));
 
 
             return responseJson(null, null, 200, 'Order created successfully.');

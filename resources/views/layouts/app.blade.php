@@ -98,18 +98,30 @@
     @if(auth()->check())
         <script>
             document.addEventListener("DOMContentLoaded", function(event) {
-                Echo.private(`App.Models.User.{{ auth()->id() }}`  )
-                    .notification((notification) => {
-                        Swal.fire({
-                            title: "New Order",
-                            text: notification.message,
-                            // icon: 'success',
-                            timer: 3000,
-                            showConfirmButton: false,
-                            position: 'bottom-end',
-                        })
-                    });
+                Echo.private(`AdminsChannel`).listen('OrderCreatedEvent', (e) => {
+                    // console.log(e);
+                    Swal.fire({
+                        text: e.msg,
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'bottom-end',
+                    })
+                });
+
             });
+            {{--document.addEventListener("DOMContentLoaded", function(event) {--}}
+            {{--    Echo.private(`private-App.Models.User.{{ auth()->id() }}`  )--}}
+            {{--        .notification((notification) => {--}}
+            {{--            Swal.fire({--}}
+            {{--                title: "New Order",--}}
+            {{--                text: notification.message,--}}
+            {{--                // icon: 'success',--}}
+            {{--                timer: 3000,--}}
+            {{--                showConfirmButton: false,--}}
+            {{--                position: 'bottom-end',--}}
+            {{--            })--}}
+            {{--        });--}}
+            {{--});--}}
 
         </script>
         @endif
