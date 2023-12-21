@@ -45,11 +45,6 @@ composer install
 npm install
 ```
 
-4. Build assets
-
-```sh
-npm run build
-```
 4. Fill Database and Pusher credentials in .env file
 5. Run migrations
 
@@ -67,6 +62,9 @@ php artisan serve
 
 
 ## Api Routes
+## Postman Collection
+
+[![User Authentication](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/25931255/2s9YkrZei8)
 
 
 
