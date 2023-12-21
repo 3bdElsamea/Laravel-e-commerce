@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//Route Group for Auth Middleware
+Route::group(['middleware' => ['auth','isAdmin']], function () {
+    Route::get('/', [OrderController::class, 'index'])->name('home');
+
 });
+
+Auth::routes();
+
