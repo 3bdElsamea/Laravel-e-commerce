@@ -36,6 +36,10 @@ class OrderController extends Controller
                     'product_id' => $cartItem->product_id,
                     'quantity' => $cartItem->quantity,
                 ]);
+
+                //Update the product quantity
+                $cartItem->product->quantity = $cartItem->product->quantity - $cartItem->quantity;
+                $cartItem->product->save();
             }
 
             //Clear the cart
