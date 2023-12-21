@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 //Route Group for Auth Middleware
 Route::group(['middleware' => ['auth','isAdmin']], function () {
     Route::get('/', [OrderController::class, 'index'])->name('home');
+    Route::get('/order/{order}', [OrderController::class, 'show'])->name('showOrder');
 
 });
 

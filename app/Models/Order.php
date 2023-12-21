@@ -11,6 +11,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'total_price',
     ];
 
     public function user()
@@ -20,13 +21,10 @@ class Order extends Model
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItems::class);
+        return $this->hasMany(OrderItem::class);
     }
 
-//    return the products of the order via the order items
-    public function products()
-    {
-        return $this->hasManyThrough(Product::class, OrderItems::class, 'order_id', 'id', 'id', 'product_id');
-    }
+
+
 
 }

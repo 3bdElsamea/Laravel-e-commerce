@@ -5,12 +5,9 @@ namespace App\Http\Controllers;
 use App\Events\OrderCreatedEvent;
 use App\Models\Cart;
 use App\Models\Order;
-use App\Models\OrderItems;
-use App\Models\User;
-use App\Notifications\OrderCreatedNotification;
+use App\Models\OrderItem;
 use Exception;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -25,32 +22,40 @@ class OrderController extends Controller
 
         try {
             $userId = auth()->id();
-            //Create a new order
-            $order = Order::create([
-                'user_id' => $userId,
-            ]);
-
-
-            // Get the cart items for the user//            dd($userId);
-
+            // Get the cart items for the user
             $cartItems = Cart::where('user_id', $userId)->with('product')->get();
 //            If the cart is empty, return an error
             if ($cartItems->isEmpty()) {
                 return responseJson(null, null, 400, 'Cart is empty.');
             }
 
+//            calculate total price
+            $totalPrice = 0;
+            foreach ($cartItems as $cartItem) {
+                $totalPrice += $cartItem->product->price * $cartItem->quantity;
+            }
+
+            //Create a new order
+            $order = Order::create([
+                'user_id' => $userId,
+                'total_price' => $totalPrice,
+            ]);
+
             // Loop through the cart items and create a new order item for each
             foreach ($cartItems as $cartItem) {
-                OrderItems::create([
+                OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $cartItem->product_id,
                     'quantity' => $cartItem->quantity,
+                    'price' => $cartItem->product->price,
                 ]);
 
                 //Update the product quantity
                 $cartItem->product->quantity = $cartItem->product->quantity - $cartItem->quantity;
                 $cartItem->product->save();
             }
+
+
 
             //Clear the cart
             Cart::where('user_id', $userId)->delete();
@@ -63,7 +68,7 @@ class OrderController extends Controller
 //            Notification::send($admins, new OrderCreatedNotification());
 
 //            Send notification to all admins using event
-            Event::dispatch(new OrderCreatedEvent(auth()->user()->name.' New Order Created'));
+            Event::dispatch(new OrderCreatedEvent(auth()->user()->name.' made a New Order'));
 
 
             return responseJson(null, null, 200, 'Order created successfully.');

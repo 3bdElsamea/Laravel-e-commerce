@@ -10,6 +10,9 @@
                     <th scope="col">Id</th>
                     <th scope="col">Made By</th>
                     <th scope="col">Made At</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Total Items</th>
+                    <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -20,6 +23,12 @@
                         <td>{{ $order->user->name }}</td>
 
                         <td>{{ $order->created_at }}</td>
+                        <td>{{ $order->total_price }}</td>
+                        <td>{{ $order->orderItems->count() }}</td>
+
+                        <td>
+                            <a href="{{ route('showOrder', $order->id) }}" class="btn btn-primary">Show</a>
+                        </td>
 
                     </tr>
                 @endforeach

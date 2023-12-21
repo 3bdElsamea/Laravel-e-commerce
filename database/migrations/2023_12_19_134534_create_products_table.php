@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('name');
             $table->integer('quantity');
             $table->string('image')->nullable();
+            $table->decimal('price', 10, 2);
             $table->timestamps();
         });
     }

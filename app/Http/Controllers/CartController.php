@@ -19,8 +19,13 @@ class CartController extends Controller
         $userId = auth()->id();
         $cartItems = Cart::where('user_id', $userId)->with('product')->get();
 
+        $totalPrice = 0;
+        foreach ($cartItems as $cartItem) {
+            $totalPrice += $cartItem->product->price * $cartItem->quantity;
+        }
+
         //Return the cart items
-        return responseJson(CartResource::Collection($cartItems));
+        return responseJson(["Items"=>CartResource::Collection($cartItems), 'total_price' => $totalPrice]);
 
     }
 
