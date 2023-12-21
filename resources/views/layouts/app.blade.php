@@ -98,7 +98,7 @@
     @if(auth()->check())
         <script>
             document.addEventListener("DOMContentLoaded", function(event) {
-                Echo.channel(`private-App.Models.User.{{ auth()->id() }}`  )
+                Echo.private(`App.Models.User.{{ auth()->id() }}`  )
                     .notification((notification) => {
                         Swal.fire({
                             title: "New Order",
